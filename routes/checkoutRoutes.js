@@ -13,8 +13,8 @@ router.post("/check-out-session", async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      success_url: `http://localhost:5173/success`,
-      cancel_url: `http://localhost:5173/failed`,
+      success_url: `https://fashion-bhandar.vercel.app/success`,
+      cancel_url: `https://fashion-bhandar.vercel.app/failed`,
       mode: "payment",
       line_items: [
         {
