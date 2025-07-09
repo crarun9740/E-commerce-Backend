@@ -14,8 +14,8 @@ router.post("/check-out-session", async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      success_url: `http://localhost:8080/api/v1/checkout/Success`,
-      cancel_url: `http://localhost:5173/failed`,
+      success_url: `https://fashion-bhandar/success`,
+      cancel_url: `https://fashion-bhandar/failed`,
       mode: "payment",
       line_items: [
         {
