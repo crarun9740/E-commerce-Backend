@@ -1,4 +1,5 @@
 const express = require("express");
+console.log(process.env.STRIPE_KEY);
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const router = express.Router();
 
