@@ -1,4 +1,5 @@
 const UserSchema = require("../models/userModal");
+const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   const email = req.body.email;
@@ -40,7 +41,10 @@ exports.login = async (req, res) => {
     });
   }
 
+  const token = jwt.sign({ id: userexist._id }, process.env.JWT_SECRET);
+
   res.status(200).json({
     message: "LoggedIn Succesfully",
+    token: token,
   });
 };
