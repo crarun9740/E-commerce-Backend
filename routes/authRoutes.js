@@ -1,5 +1,5 @@
 const express = require("express");
-const { Signup, Login } = require("../controllers/authController.js");
+const { Signup, Login, Logout } = require("../controllers/authController.js");
 
 const authrouter = express.Router();
 
@@ -9,15 +9,16 @@ authrouter.post("/signup", Signup);
 // Login route
 authrouter.post("/login", Login);
 
-// (Optional) Logout route to clear the cookie
-authrouter.post("/logout", (req, res) => {
-  res.cookie("token", "", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    expires: new Date(0), // expire immediately
+// Logout route
+authrouter.post("/logout", Logout);
+
+// Health check route for testing
+authrouter.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Auth service is running",
+    timestamp: new Date().toISOString(),
   });
-  res.json({ message: "Logged out successfully" });
 });
 
 module.exports = authrouter;
