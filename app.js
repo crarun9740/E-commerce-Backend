@@ -7,12 +7,17 @@ const cartRoutes = require("./routes/cartRouter");
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-const authrouter = require("./routes/authRoutes");
 
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Adjust origin for your frontend
+app.use(
+  cors({
+    origin: "https://fashion-bhandar.arunchavan.site", // frontend URL
+    credentials: true, // allow cookies
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
