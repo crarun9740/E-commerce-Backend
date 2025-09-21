@@ -13,8 +13,8 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: "https://fashion-bhandar.arunchavan.site", // frontend URL
-    credentials: true, // allow cookies
+    origin: "https://fashion-bhandar.arunchavan.site", // your deployed frontend
+    credentials: true, // allow cookies / credentials
   })
 );
 
