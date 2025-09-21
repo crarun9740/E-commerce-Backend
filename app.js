@@ -7,6 +7,7 @@ const cartRoutes = require("./routes/cartRouter");
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const authrouter = require("./routes/authRoutes");
 
 const app = express();
 

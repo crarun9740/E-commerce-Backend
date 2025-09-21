@@ -1,50 +1,66 @@
-const UserSchema = require("../models/userModal");
-const jwt = require("jsonwebtoken");
+const { User } = require("../models/userModal.js");
+const bcrypt = require("bcrypt");
+const { generateToken } = require("../Utils/generateToken.js");
 
-exports.signup = async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+// Signup Controller
+const Signup = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const userexist = await UserSchema.findOne({ email: email });
+    const UserExist = await User.findOne({ email });
 
-  if (userexist) {
-    res.status(411).json({
-      message: "user already exist",
+    if (UserExist) {
+      return res.status(400).json({ message: "email already exist" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.create({
+      email,
+      password: hashedPassword,
     });
+
+    res.status(201).json({
+      message: "Signup successful",
+      _id: user._id,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const newUser = await UserSchema.create({
-    email: email,
-    password: password,
-  });
-
-  res.status(200).json({
-    message: "User Created Succesfully",
-    user_details: newUser,
-  });
 };
 
-exports.login = async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+// Login Controller
+const Login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const userexist = await UserSchema.findOne({ email: email });
+    const user = await User.findOne({ email });
 
-  if (!userexist) {
-    res.status(411).json({
-      message: "user not exist, Please create your account",
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    console.log("Entered password:", password);
+    console.log("Stored password:", user.password);
+
+    const isMatchpass = await bcrypt.compare(password, user.password);
+    console.log("Password match result:", isMatchpass);
+
+    if (!isMatchpass) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    res.json({
+      _id: user._id,
+      email: user.email,
+      token: generateToken(user._id),
     });
+  } catch (error) {
+    return res.status(501).json({ message: error.message });
   }
-  if (userexist.password != password) {
-    res.status(411).json({
-      message: "Invalid username or password",
-    });
-  }
-
-  const token = jwt.sign({ id: userexist._id }, process.env.JWT_SECRET);
-
-  res.status(200).json({
-    message: "LoggedIn Succesfully",
-    token: token,
-  });
 };
+
+module.exports = { Signup, Login };
